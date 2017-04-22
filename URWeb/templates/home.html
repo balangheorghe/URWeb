@@ -3,19 +3,19 @@
 
 -->
 <html>
-	<head>
+    <head>
         <!--<base href="/~adrian.piriu/lettredemotivation/">-->
-		<title>Login</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Log out</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
         <!-- jQuery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
-
-	<style type="text/css">
+	
+        <style type="text/css">
            body {
                 {% load static %}
                 background-image: url({% static "images/background.jpg" %});
@@ -31,49 +31,45 @@
                 height: 400%;
 		
                 padding: 0;
-              }
-
+                }
         </style>
 
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	</head>
+    </head>
     
-	<body>
-	<div
-  	class="fb-like"
-  	data-share="true"
-  	data-width="450"
-  	data-show-faces="true">
-	</div>
-
+    <body>
         <div class="container-fluid container">    
-        <div id="myaccountbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+        <div id="homebox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
             <div class="panel panel-info" >
+
                     <div class="panel-heading">
-                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/logout">Log out</a></div>
-                    </div>     
+		       <div class="panel-title">Sign In</div>
+                       <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/login">Log in your account</a></div>
+                    </div> 
+                        
+                        <div style="padding-top:30px" class="panel-body" >
 
-                    <div style="padding-top:30px" class="panel-body" >
+                        <div style="display:none" id="home-alert" class="alert alert-danger col-sm-12"></div>
 
-		 	{% if name %}
-			<center>Hello, {{ name }}!</center>
-			{% endif %}
-	
-	
-                        <div style="display:none" id="myaccount-alert" class="alert alert-danger col-sm-12"></div>
-                
-		  	    {% if user and not user.is_anonymous %}
-                               <center>Hello {{ user.get_full_name|default:user.username }}!</center>
+                        <p> 
+                            <center>Hello, I will help you find the locations you need!</center>
+			    
+                            {% if user and not user.is_anonymous %}
+                               <center>Hello {{ user }}!</center>
                                 <li>
        				<center><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></center>
      				</li>
+                            {% else %}
+                            <center>   I don’t think we’ve met before. </center>
                             {% endif %}
-                           
+                                
+                        </p>     
+                        
                         </div>                     
-                    </div>  
+            </div>  
         </div>
         </div>
     
-	</body>
+    </body>
 </html>

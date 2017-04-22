@@ -5,7 +5,7 @@
 <html>
 	<head>
         <!--<base href="/~adrian.piriu/lettredemotivation/">-->
-		<title>Login</title>
+		<title>Log out</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
         <!-- Latest compiled and minified CSS -->
@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
 
 	<style type="text/css">
-           body {
+     	    body {
                 {% load static %}
                 background-image: url({% static "images/background.jpg" %});
                 background-size: cover;
@@ -31,8 +31,7 @@
                 height: 400%;
 		
                 padding: 0;
-              }
-
+                }
         </style>
 
         <!-- Latest compiled JavaScript -->
@@ -40,38 +39,27 @@
 	</head>
     
 	<body>
-	<div
-  	class="fb-like"
-  	data-share="true"
-  	data-width="450"
-  	data-show-faces="true">
-	</div>
-
         <div class="container-fluid container">    
-        <div id="myaccountbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+        <div id="logoutbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
             <div class="panel panel-info" >
+
                     <div class="panel-heading">
-                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/logout">Log out</a></div>
-                    </div>     
+                        <div class="panel-title">Sign In</div>
+                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/login">Login Page</a></div>
+                    </div> 
+                        
+                        <div style="padding-top:30px" class="panel-body" >
 
-                    <div style="padding-top:30px" class="panel-body" >
+                        <div style="display:none" id="logout-alert" class="alert alert-danger col-sm-12"></div>
 
-		 	{% if name %}
-			<center>Hello, {{ name }}!</center>
-			{% endif %}
-	
-	
-                        <div style="display:none" id="myaccount-alert" class="alert alert-danger col-sm-12"></div>
-                
-		  	    {% if user and not user.is_anonymous %}
-                               <center>Hello {{ user.get_full_name|default:user.username }}!</center>
-                                <li>
-       				<center><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></center>
-     				</li>
-                            {% endif %}
-                           
+                        <form id="logoutform" class="form-horizontal" role="form" action="/logout" method="post">
+                            
+                            <center>You have just been logged out!</center>
+			                    
+                        </form>     
+                        
                         </div>                     
-                    </div>  
+            </div>  
         </div>
         </div>
     
