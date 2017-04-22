@@ -21,6 +21,7 @@ from URWeb import home
 from URWeb.login import LoginView
 from django.views.generic import TemplateView
 from .gba.urls import urls
+from .api.urls import api_urls
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
@@ -28,5 +29,6 @@ urlpatterns = [
     url(r'^login',  LoginView.as_view(template_name="login.html"), name='login'),
     url(r'^signup', TemplateView.as_view(template_name='signup.html'), name='signup'),		
     url(r'^myaccount', TemplateView.as_view(template_name='myaccount.html'), name='myaccount'),
-    url(r'^gba', include(urls))
+    url(r'^gba', include(urls)),
+    url(r'^api', include(api_urls))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
