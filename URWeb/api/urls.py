@@ -17,5 +17,5 @@ from django.conf.urls import url
 from .apis.plugins import Plugins
 
 api_urls = [
-    url(r'^/plugins(?:/(?P<name>\w+))?/fmt/$(?P<format>\w+)', Plugins.as_view(), name='plugins')
+    url(r'^/plugins(?:/(?P<name>\w+))?/(?:/(?P<format>\w+))?&', Plugins.as_view(), name='plugins')
 ]
