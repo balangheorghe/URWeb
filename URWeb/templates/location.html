@@ -51,7 +51,7 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Plugins
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#" data-toggle="modal" data-target="#addPlugin">Add Plugin</a></li>
+                  <li><a href="#" data-toggle="modal" data-target="#addPlugin" onclick="addPluginModalLoad()">Add Plugin</a></li>
                   <li><a href="#" data-toggle="modal" data-target="#viewPlugin">View Plugin</a></li>
                 </ul>
               </li>
@@ -93,6 +93,7 @@
     <!-- Modals -->
     <!-- ----------------- -->
     <!-- Modal -->
+    
     <div id="addPlugin" class="modal fade" role="dialog">
       <div class="modal-dialog">
 
@@ -101,6 +102,11 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Add Plugin</h4>
+          </div>
+          <div id="alertZone">
+            <!-- <div class="alert alert-success">
+                <strong>Success!</strong> The file has been uploaded!
+            </div> -->
           </div>
           <div class="modal-body">
              <form class="form-horizontal">
@@ -128,14 +134,15 @@
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                 <!-- HERE PUT DATA AND VERIFY IT -->
-                  <button type="submit" class="btn btn-primary pull-right" onclick="submitPlugin()">Submit</button>
+                  <button type="button" class="btn btn-primary pull-right" onclick="submitPlugin()">Submit</button>
                 </div>
               </div>
             </form>
+            
             <!-- ADD BS ALERTS TO NOTIFY USER IF PLUGIN WAS ADDED -->
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeSubmision()">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
 
@@ -184,6 +191,40 @@
     <!-- Scripts -->
     <!-- ----------------- -->
     <script>
+    function addPluginModalLoad()
+    {
+      var div = document.getElementById("alertZone")
+      div.innerHTML = ''
+    }
+    function submitPlugin(){
+      $.ajax({
+        type: 'put',
+        url: '/plugins',
+        data: 'nodata',
+        processData:false,
+        success:function(data){
+          if (data === "OK")
+          {
+            var div = document.getElementById("alertZone")
+            div.innerHTML = '<div class="alert alert-success"><strong>Success!</strong> The file has been uploaded!</div>'
+          }
+          else
+          {
+            var div = document.getElementById("alertZone")
+            div.innerHTML = '<div class="alert alert-danger"><strong>Something Failed!</strong> Error' + data + '</div>'
+          }
+        },
+        failure:function(error){
+          var div = document.getElementById("alertZone")
+          div.innerHTML = '<div class="alert alert-danger"><strong>Something Failed!</strong> Error' + error + '</div>'
+        }
+      });
+
+    }
+    // $('#addPlugin').modal({
+    //   backdrop: 'static',
+    //   keyboard: false
+    // })
     $("#arctip").tooltip({
         placement: "top"
     });

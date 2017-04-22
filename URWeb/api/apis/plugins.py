@@ -8,3 +8,6 @@ from django.views import generic
 class Plugins(generic.View):
     def get(self, request, name, format):
         return HttpResponse("OKOKOKOK")
+
+    def put(self, request):
+    	return HttpResponse("OK")
