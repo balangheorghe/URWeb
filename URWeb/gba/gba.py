@@ -93,7 +93,7 @@ class Main(generic.TemplateView):
 		# url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg')
 		apiKey = "AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg"
 		# url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=500&key={}'.format(lat, lng, apiKey))
-		url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=500&key={}'.format(request.POST["lat"], request.POST["lng"], apiKey))
+		url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=50&key={}'.format(request.POST["lat"], request.POST["lng"], apiKey))
 		response = url.json()
 		firstResultCode, resultCode, data = self.constructData(response, apiKey, 2)
 		
@@ -109,12 +109,17 @@ class Main(generic.TemplateView):
 		# result = ""
 		# for items in data:
 		# 	result += items['name'].encode('ascii', 'ignore') + "\n"
+		# allTypes = []
+		# for item in data:
+		# 	for types in item['types']:
+		# 		if types not in allTypes:
+		# 			allTypes.append(types)
+		# result = allTypes
+		result = "<br><ol>"
 		allTypes = []
-		for item in data:
-			for types in item['types']:
-				if types not in allTypes:
-					allTypes.append(types)
-		result = allTypes
+		for items in data:
+			result += "<li>" + str(items['name'].encode('ascii', 'ignore')) + "</li>"
+		result += "</ol><br>"
 		return HttpResponse(str(result))
 
 class Location(generic.TemplateView):

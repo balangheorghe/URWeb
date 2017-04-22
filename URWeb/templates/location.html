@@ -63,21 +63,52 @@
       <label>Some text:</label>
       <label id="txtItem33">TEEER</label>
     </div>
+    <div id = "testSample">
+    InitialState
+    </div>
     <script>
+    function appendHtml(id, el, str) {
+  var div = document.getElementById(id);
+  div.innerHTML = str;
+}
     var origin = {lat: -34.397, lng: 150.644};
+    var origin2;
+    // var origin2 = new Object();
+    // origin2.lat_ = origin['lat'];
+
+    // origin2.lat = function() {
+    //   return this.lat_;
+    // }
+
+    // origin2.lng_ = origin['lng'];
+    
+    // origin2.lng = function() {
+    //   return this.lng_;
+    // }
+    var map, infoWindow;
     function getDoc(){
-      console.log("function getDoc()")
-      $.post('/gba/temp', origin, function(response){
-        document.getElementById("txtItem33").innerText = response;
+      console.log("function getDoc()");
+      
+      console.log(origin2);
+      if (origin2)
+      {
+        temp = {lat: origin2.lat(), lng: origin2.lng()}
+      }
+      else
+      {
+        temp = {lat: origin.lat, lng: origin.lng}
+      }
+      $.post('/gba/temp', temp, function(response){
+        // document.getElementById("testSample").innerHtml = response;
         // console.log("data");
         // alert(response);
+        appendHtml("testSample", document.body, response);
       });
     }
       // Note: This example requires that you consent to location sharing when
       // prompted by your browser. If you see the error "The Geolocation service
       // failed.", it means you probably did not give permission for the browser to
       // locate you.
-      var map, infoWindow;
       function initMap(zoom_ = 17) {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
@@ -136,6 +167,9 @@
 
       ClickEventHandler.prototype.handleClick = function(event) {
         console.log('You clicked on: ' + event.latLng);
+        origin2 = event.latLng
+        // origin2.lat = myvar.lat();
+        // origin2.lng = myvar.lng();
         // If the event has a placeId, use it.
         if (event.placeId) {
           console.log('You clicked on place:' + event.placeId);
