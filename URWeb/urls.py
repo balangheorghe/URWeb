@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from URWeb import home
 from URWeb.login import LoginView
@@ -27,4 +29,4 @@ urlpatterns = [
     url(r'^signup', TemplateView.as_view(template_name='signup.html'), name='signup'),		
     url(r'^myaccount', TemplateView.as_view(template_name='myaccount.html'), name='myaccount'),
     url(r'^gba', include(urls))
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
