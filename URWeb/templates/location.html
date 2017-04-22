@@ -58,7 +58,21 @@
         <input class="form-control" id="zoom" style="max-width: 30%">
         <button class="btn btn-default" onclick="refresh()">Refresh</button>
     </div>
+    <div>
+      <button class="btn btn-default" onclick="getDoc()">Refresh</button>
+      <label>Some text:</label>
+      <label id="txtItem33">TEEER</label>
+    </div>
     <script>
+    var origin = {lat: -34.397, lng: 150.644};
+    function getDoc(){
+      console.log("function getDoc()")
+      $.post('/gba/temp', origin, function(response){
+        document.getElementById("txtItem33").innerText = response;
+        // console.log("data");
+        // alert(response);
+      });
+    }
       // Note: This example requires that you consent to location sharing when
       // prompted by your browser. If you see the error "The Geolocation service
       // failed.", it means you probably did not give permission for the browser to
@@ -70,7 +84,7 @@
           zoom: zoom_
         });
         infoWindow = new google.maps.InfoWindow;
-
+      	
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
@@ -78,6 +92,8 @@
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
+            origin.lat = pos.lat;
+            origin.lng = pos.lng;
             map.addListener('dblclick', function(event) {
                 addMarker(event.latLng);
             });
@@ -93,6 +109,7 @@
           // Browser doesn't support Geolocation
           handleLocationError(false, infoWindow, map.getCenter());
         }
+        var clickHandler = new ClickEventHandler(map, origin);	
       }
       function addMarker(location) {
         var marker = new google.maps.Marker({
@@ -101,6 +118,68 @@
         });
         markers.push(marker);
       }
+
+		var ClickEventHandler = function(map, origin) {
+        this.origin = origin;
+        this.map = map;
+        this.directionsService = new google.maps.DirectionsService;
+        this.directionsDisplay = new google.maps.DirectionsRenderer;
+        this.directionsDisplay.setMap(map);
+        this.placesService = new google.maps.places.PlacesService(map);
+        this.infowindow = new google.maps.InfoWindow;
+        this.infowindowContent = document.getElementById('infowindow-content');
+        this.infowindow.setContent(this.infowindowContent);
+
+        // Listen for clicks on the map.
+        this.map.addListener('click', this.handleClick.bind(this));
+      };
+
+      ClickEventHandler.prototype.handleClick = function(event) {
+        console.log('You clicked on: ' + event.latLng);
+        // If the event has a placeId, use it.
+        if (event.placeId) {
+          console.log('You clicked on place:' + event.placeId);
+
+          // Calling e.stop() on the event prevents the default info window from
+          // showing.
+          // If you call stop here when there is no placeId you will prevent some
+          // other map click event handlers from receiving the event.
+          event.stop();
+          this.calculateAndDisplayRoute(event.placeId);
+          // this.getPlaceInformation(event.placeId);
+        }
+      };
+
+      ClickEventHandler.prototype.calculateAndDisplayRoute = function(placeId) {
+        var me = this;
+        this.directionsService.route({
+          origin: this.origin,
+          destination: {placeId: placeId},
+          travelMode: 'WALKING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            me.directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      };
+
+      ClickEventHandler.prototype.getPlaceInformation = function(placeId) {
+        var me = this;
+        this.placesService.getDetails({placeId: placeId}, function(place, status) {
+          if (status === 'OK') {
+            me.infowindow.close();
+            me.infowindow.setPosition(place.geometry.location);
+            me.infowindowContent.children['place-icon'].src = place.icon;
+            me.infowindowContent.children['place-name'].textContent = place.name;
+            me.infowindowContent.children['place-id'].textContent = place.place_id;
+            me.infowindowContent.children['place-address'].textContent =
+                place.formatted_address;
+            me.infowindow.open(me.map);
+          }
+        });
+      };
 
       function refresh() {
           var integer = parseInt(document.getElementById('zoom').value); 
@@ -121,8 +200,10 @@
         infoWindow.open(map);
       }
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg&callback=initMap">
-    </script>
+    <!-- <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg&libraries=places&callback=initMap">
+    </script> -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg&libraries=places&callback=initMap"
+        async defer></script>
   </body>
 </html>

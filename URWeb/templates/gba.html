@@ -1,9 +1,21 @@
 <!DOCTYPE HTML5>
 <html>
 <head>
-"Ana nu are mere"
+"Ana are mere"
 </head>
 <body>
-"Ana are mere"
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        console.log("No geolocation;");
+    }
+}
+function showPosition(position) {
+    console.log("Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude);
+}
+</script>            
 </body>
 </html>
