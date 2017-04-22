@@ -90,10 +90,11 @@ class Main(generic.TemplateView):
 		return HttpResponse(str(result))
 
 	def post(self, request, name):
+		body = json.loads(request.body)
 		# url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg')
 		apiKey = "AIzaSyDXYDYmpNXAo01aw71oMT6KJXoI1aTTyvg"
 		# url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=500&key={}'.format(lat, lng, apiKey))
-		url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=50&key={}'.format(request.POST["lat"], request.POST["lng"], apiKey))
+		url = requests.get(r'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=50&key={}'.format(body["lat"], body["lng"], apiKey))
 		response = url.json()
 		firstResultCode, resultCode, data = self.constructData(response, apiKey, 2)
 		
@@ -121,6 +122,9 @@ class Main(generic.TemplateView):
 			result += "<li>" + str(items['name'].encode('ascii', 'ignore')) + "</li>"
 		result += "</ol><br>"
 		return HttpResponse(str(result))
+
+	def put(self, requests, name):
+		return HttpResponse("OK")
 
 class Location(generic.TemplateView):
 	template_name = "location.html"

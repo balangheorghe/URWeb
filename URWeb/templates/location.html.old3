@@ -24,7 +24,7 @@
         height: 100%;
         margin: 0;
         padding: 0;
-      }  
+      }
     </style>
   </head>
   <body>
@@ -45,149 +45,53 @@
 <!--            <li class="active"><a href="#">Back</a></li>-->
               <button onclick="location.href='.'" class="btn navbar-btn">Back</button>
           </ul>
-            
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Plugins
-                <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#" data-toggle="modal" data-target="#addPlugin">Add Plugin</a></li>
-                  <li><a href="#" data-toggle="modal" data-target="#viewPlugin">View Plugin</a></li>
-                </ul>
-              </li>
             <li><a href="#"><span class="glyphicon glyphicon-user"></span> Username</a></li>
           </ul>
         </div>
       </div>
     </nav>
-    <div id="map" style="max-height: 80%;"></div>
-<!--
-    <ul class="list-group" style="max-height: 80%; max-width: 25%; /*margin-left: auto; margin-right: 0; top: -15px;*/">
-        <li class="list-group-item">Pisi</li>
-    </ul>
--->
-     <div class="form form-inline text-right">
-     <div class="form-group">
-        <label for="sel1">Plugin:&nbsp;</label>
-        <select class="form-control" id="sel1">
-        <!-- Here add options from python plugins - each option = one plugin -->
-          {% for option in options %}
-            <option>option</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group">
-          <button type="submit" class="btn btn-default">Refresh</button>
-         </div>
-      </div>
-    
+    <div id="map" style="max-height: 80%; max-weight: 90%;"></div>
+      
+    <div class="form form-inline">
+        <label>Zoom:</label>
+        <input class="form-control" id="zoom" style="max-width: 30%">
+        <button class="btn btn-default" onclick="refresh()">Refresh</button>
+    </div>
     <div>
       <button class="btn btn-default" onclick="getDoc()">Refresh</button>
       <label>Some text:</label>
       <label id="txtItem33">TEEER</label>
     </div>
-    <div id = "plugin-data"></div>
-      
-      
-    
-    <!-- Modals -->
-    <!-- ----------------- -->
-    <!-- Modal -->
-    <div id="addPlugin" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Add Plugin</h4>
-          </div>
-          <div class="modal-body">
-             <form class="form-horizontal">
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="plname">Plugin:</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="plname" placeholder="Enter plugin name">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="pldesc">Description:</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="pldesc" placeholder="Enter plugin description">
-                </div>
-              </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="brs">Archive:</label>
-                    <div class="col-sm-10">
-                    <span class="btn btn-default btn-file" id="brs">
-                        <input type="file" name="inputArchive">
-                    </span>
-                    <span id="arctip" title="Upload a zip archive which contains a .py file and an optional .html file" data-html="true" rel="tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                    </div>
-                </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                <!-- HERE PUT DATA AND VERIFY IT -->
-                  <button type="submit" class="btn btn-primary pull-right" onclick="submitPlugin()">Submit</button>
-                </div>
-              </div>
-            </form>
-            <!-- ADD BS ALERTS TO NOTIFY USER IF PLUGIN WAS ADDED -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeSubmision()">Close</button>
-          </div>
-        </div>
-
-      </div>
+    <div id = "testSample">
+    InitialState
     </div>
-    
-    <!-- Modal -->
-    <div id="viewPlugin" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Plugins</h4>
-          </div>
-          <div class="modal-body">
-            <div class="list-group">
-                <!-- info -->
-                 <div class="panel-group">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse1">View custom nearby places</a>
-                      </h4>
-                    </div>
-                    <div id="collapse1" class="panel-collapse collapse">
-                      <div class="panel-body">Description: Allows the user to select options regarding the type of nearby places to view on map and filters for those points of interest</div>
-                    </div>
-                  </div>
-                </div>
-                <!-- info -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-
-      </div>
+    <div>
+    <button class="btn btn-default" onclick="testPut()">Test PUT</button>
     </div>
-    
-    <!-- End of Modals -->
-      
-      
-    <!-- Scripts -->
-    <!-- ----------------- -->
     <script>
-    $("#arctip").tooltip({
-        placement: "top"
-    });
-        
+    function testPut()
+    {
+      console.log("Test put")
+      // $.put("/gba/temp", {buf: "buff"}, function(response)
+      //   {
+      //     alert(response)
+      //   });
+      temp = {buf : 'buf'}
+      $.ajax({
+        type : 'put',
+        url: '/gba/temp',
+        data: JSON.stringify(temp),
+        processData: false,
+        success: function(data){alert(data)},
+        failure: function(errMsg) {
+        alert(errMsg);
+        }
+      }
+      );
+    }
+
+
     function appendHtml(id, el, str) {
   var div = document.getElementById(id);
   div.innerHTML = str;
@@ -219,12 +123,25 @@
       {
         temp = {lat: origin.lat, lng: origin.lng}
       }
-      $.post('/gba/temp', temp, function(response){
-        // document.getElementById("plugin-data").innerHtml = response;
-        // console.log("data");
-        // alert(response);
-        appendHtml("plugin-data", document.body, response);
-      });
+      console.log(temp)
+      $.ajax({
+        type : 'post',
+        url: '/gba/temp',
+        data: JSON.stringify(temp),
+        processData: false,
+        success: function(data){appendHtml("testSample", document.body, data)},
+        failure: function(errMsg) {
+        alert(errMsg);
+        }
+      }
+      );
+     
+      // $.post('/gba/temp', temp, function(response){
+      //   // document.getElementById("testSample").innerHtml = response;
+      //   // console.log("data");
+      //   // alert(response);
+      //   appendHtml("testSample", document.body, response);
+      // });
     }
       // Note: This example requires that you consent to location sharing when
       // prompted by your browser. If you see the error "The Geolocation service
