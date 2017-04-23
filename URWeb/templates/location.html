@@ -28,7 +28,7 @@
     </style>
   </head>
   <body>
-     <nav class="navbar navbar-inverse">
+      <nav class="navbar navbar-inverse">
       <div class="container-fluid">
 <!--
         <div class="navbar-header">
@@ -66,18 +66,14 @@
         <li class="list-group-item">Pisi</li>
     </ul>
 -->
-     <div class="form form-inline text-right">
-     <div class="form-group">
+     <div class="form form-inline text-right" onload="getListOfPlugins()">
+      <div class="form-group">
         <label for="sel1">Plugin:&nbsp;</label>
-        <select class="form-control" id="sel1">
-        <!-- Here add options from python plugins - each option = one plugin -->
-          {% for option in options %}
-            <option>option</option>
-          {% endfor %}
+        <select class="form-control" id="selection1">
         </select>
       </div>
       <div class="form-group">
-          <button type="submit" class="btn btn-default">Refresh</button>
+          <button type="submit" class="btn btn-default">Select</button>
          </div>
       </div>
     
@@ -86,7 +82,9 @@
       <label>Some text:</label>
       <label id="txtItem33">TEEER</label>
     </div>
-    <div id = "plugin-data"></div>
+    <div id = "plugin-data">
+      
+    </div>
       
       
     
@@ -191,35 +189,65 @@
     <!-- Scripts -->
     <!-- ----------------- -->
     <script>
+    $(document).ready(function() {
+      $.ajax({
+        type: 'get',
+        url: '../api/plugins',
+        processData:false,
+        success:function(data)
+        {
+          var div = document.getElementById("selection1")
+          div.innerHTML = data
+        },
+        failure:function(data)
+        {
+          var div = document.getElementById("selection1")
+          div.innerHTML = '<option>Error<option>'
+        }
+      })
+      var div = document.getElementById("selection1")
+      div.innerHTML = '<option>mere</option><option>ana</option>'
+
+    })
     function addPluginModalLoad()
     {
       var div = document.getElementById("alertZone")
       div.innerHTML = ''
     }
     function submitPlugin(){
-      $.ajax({
-        type: 'put',
-        url: '/plugins',
-        data: 'nodata',
-        processData:false,
-        success:function(data){
-          if (data === "OK")
-          {
+      var pluginName = document.getElementById("plname").value
+      var description = document.getElementById("pldesc").value
+      var data = {name: pluginName, desc: description}
+      var regexVerifier = new RegExp("^[A-Za-z0-9.@!#$%_]+$")
+      if (regexVerifier.test(pluginName) == false || regexVerifier.test(description) == false)
+      {
+        var div = document.getElementById("alertZone")
+        div.innerHTML = '<div class="alert alert-warning"><strong>Warning!</strong> Invalid data in required fields!</div>'
+      }
+      else{
+        $.ajax({
+          type: 'put',
+          url: '../api/plugins',
+          data: JSON.stringify(data),
+          processData:false,
+          success:function(data){
+            if (data === "OK")
+            {
+              var div = document.getElementById("alertZone")
+              div.innerHTML = '<div class="alert alert-success"><strong>Success!</strong> The file has been uploaded!</div>'
+            }
+            else
+            {
+              var div = document.getElementById("alertZone")
+              div.innerHTML = '<div class="alert alert-danger"><strong>Something Failed!</strong> Error: ' + data + '</div>'
+            }
+          },
+          failure:function(error){
             var div = document.getElementById("alertZone")
-            div.innerHTML = '<div class="alert alert-success"><strong>Success!</strong> The file has been uploaded!</div>'
+            div.innerHTML = '<div class="alert alert-danger"><strong>Something Failed!</strong> Error: ' + error + '</div>'
           }
-          else
-          {
-            var div = document.getElementById("alertZone")
-            div.innerHTML = '<div class="alert alert-danger"><strong>Something Failed!</strong> Error' + data + '</div>'
-          }
-        },
-        failure:function(error){
-          var div = document.getElementById("alertZone")
-          div.innerHTML = '<div class="alert alert-danger"><strong>Something Failed!</strong> Error' + error + '</div>'
-        }
-      });
-
+        });
+      }
     }
     // $('#addPlugin').modal({
     //   backdrop: 'static',
